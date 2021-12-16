@@ -15,6 +15,31 @@ exports.handler = async function (context, event, callback) {
 
 
   // ここから実装を開始
+  // Sync Document名
+  const documentName = 'streaming_info';
+
+  // Sync Documentを取得
+  let syncDocument  = await client.sync.services(SYNC_SERVICE_SID)
+    .documents(documentName)
+    .fetch();
+
+    // ドキュメントが取得できた場合
+    if (syncDocument) {
+      // MediaProcessor Sidを取得
+      const { mediaProcessorSid } = syncDocument.data;
+      const result = await client.media.mediaProcessor(mediaProcessorSid)
+        .update({
+          status: 'ended'
+        });
+      console.log(`MediaProcessor ${result.sid} のステータスを ${result.status} に変更しました。`);
+  
+      if (result.status === 'ENDED') { 
+        // Sync Documentを削除
+        await client.sync.services(SYNC_SERVICE_SID)
+        .documents(documentName)
+        .remove();
+      }
+    }
 
   callback(null, '');
 };
