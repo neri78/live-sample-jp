@@ -19,7 +19,7 @@ exports.handler = async function (context, event, callback) {
 
   // PlayerStreamerを作成
   const playerStreamer = await client.media.playerStreamer.create();
-  console.log(`PlayerStramerが作成されました - ${playerStreamer.sid}`);
+  console.log(`PlayerStreamerが作成されました - ${playerStreamer.sid}`);
 
   // MediaProcessorを作成
   const mediaProcessor = await client.media.mediaProcessor.create({
